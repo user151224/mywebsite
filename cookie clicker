@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Keebler Cookie Clicker</title>
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+}
+#cookie {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #F0E68C;
+  margin: 50px auto;
+  cursor: pointer;
+}
+#score {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+.item {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.item:hover {
+  background-color: #eee;
+}
+.item .name {
+  font-weight: bold;
+}
+.item .cost {
+  color: #999;
+}
+</style>
+</head>
+<body>
+  <h1>Cookie Clicker</h1>
+  <div id="cookie" onclick="clickCookie()"></div>
+  <div id="score">Cookies: 0</div>
+  <div id="items"></div>
+  <script>
+    let cookies = 0;
+    let cps = 0; // Cookies per second
+    const items = [
+      { name: "Cursor", cost: 15, cps: 0.1 },
+      { name: "Grandma", cost: 100, cps: 1 },
+      { name: "Farm", cost: 1100, cps: 8 },
+      { name: "Mine", cost: 12000, cps: 47 },
+      { name: "Factory", cost: 130000, cps: 260 },
+      { name: "Bank", cost: 1400000, cps: 1400 },
+      { name: "Temple", cost: 20000000, cps: 7800 },
+      { name: "Wizard Tower", cost: 330000000, cps: 44000 },
+      { name: "Shipment", cost: 5100000000, cps: 260000 },
+      { name: "Alchemy Lab", cost: 75000000000, cps: 1600000 },
+      { name: "Portal", cost: 1000000000000, cps: 10000000 },
+      { name: "Time Machine", cost: 14000000000000, cps: 61000000 },
+      { name: "Antimatter Condenser", cost: 170000000000000, cps: 400000000 },
+      { name: "Prism", cost: 2100000000000000, cps: 2900000000 },
+      { name: "Chancemaker", cost: 26000000000000000, cps: 21000000000 },
+      { name: "Fractal Engine", cost: 310000000000000000, cps: 150000000000 },
+    ];
+    function clickCookie() {
+      cookies++;
+      updateScore();
+    }
+    function buyItem(index) {
+      const item = items[index];
+      if (cookies >= item.cost) {
+        cookies -= item.cost;
+        cps += item.cps;
+        items[index].cost = Math.round(item.cost * 1.15);
+        updateScore();
+        updateItems();
+      }
+    }
+    function updateScore() {
+      document.getElementById("score").textContent = "Cookies: " + cookies;
+    }
+    function updateItems() {
+      const itemsDiv = document.getElementById("items");
+      itemsDiv.innerHTML = "";
+      items.forEach((item, index) => {
+        const itemDiv = document.createElement("div");
+        itemDiv.classList.add("item");
+        itemDiv.innerHTML = `
+          <div class="name">${item.name}</div>
+          <div class="cost">Cost: ${item.cost}</div>
+          <div class="cps">CPS: +${item.cps}</div>
+        `;
+        itemDiv.onclick = () => buyItem(index);
+        itemsDiv.appendChild(itemDiv);
+      });
+    }
+    setInterval(() => {
+      cookies += cps;
+      updateScore();
+    }, 1000);
+    updateItems();
+  </script>
+</body>
+</html>
